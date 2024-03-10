@@ -40,12 +40,14 @@
         />
       </div>
       <div class="mb-4">
-        <div class="w-[100px]"
-            v-for="image in imageUrl"
-        >
-          <img  :src="image" alt=""/>
-        </div>
+
         <label class="block text-gray-700 font-bold mb-2" for="image">
+          <dev class="flex flex-wrap">
+          <div class=" mr-2 mb-2 w-[100px] border-[2px] border-red-500" v-for="image in imageUrl">
+            <img  :src="image" alt=""
+            />
+          </div>
+          </dev>
           Изображение
         </label>
         <input
@@ -87,6 +89,7 @@ let {imageFile,imageUrl, handleImageSelected } = useImageUpload()
   if (!imageFile.value) return
 
     const formData = new FormData()
+
 
     formData.append('title', product.title)
     formData.append('description', product.description)

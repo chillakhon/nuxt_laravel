@@ -6,7 +6,7 @@
             title: product.title,
             description: product.description,
             price: product.price,
-            image: product.image
+            image: product.images
         })"
     >
       <div class="mb-4">
@@ -48,9 +48,16 @@
       </div>
       <div class="border px-4 py-2 flex overflow-x-auto">
       <div class="flex-none w-48 mr-2 mb-1"
-           v-for="imageUrl in product.images">
+           v-for="(imageUrl, index) in product.images" key="index">
         <div class="border border-red-600 p-1">
-        <img :src="`http://127.0.0.1:8000/storage/products/${imageUrl.image_path}`" :alt="product.title">
+          <button
+              @click="removeImage(index)"
+              class=" bg-red-500 text-white px-2 py-0 rounded-bl"
+          >
+            &times;
+          </button>
+        <img  :src="`http://127.0.0.1:8000/storage/products/${imageUrl.image_path}`" :alt="product.title"
+        >
         </div>
       </div>
       </div>
@@ -67,7 +74,6 @@
       </div>
       <div class="flex items-center justify-between">
         <button
-
             type="submit"
             class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
         >
@@ -87,10 +93,17 @@ const route = useRoute()
 const productId = route.params.id
 const product = ref(await useProducts().showProduct(productId))
 const products = ref({
-  title: '',
-  description: '',
-  price: null,
-  image: null,
+  title: product.value.title,
+  description: product.value.description,
+  price: product.value.price,
+  image: product.value.images,
 });
 
+const removeImage = (index) => {
+  product.value.images.splice(index, 1);
+  products.value.image = product.value.images;
+};
+
+
+const handleImageUpload = async (e) => {}
 </script>

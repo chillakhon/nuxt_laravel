@@ -23,16 +23,6 @@
   </div>
 
 
-  <div
-      class=" flex mr-2">
-    <div class="border border-red-500 m-2 ">One</div>
-    <div class="border border-red-500 m-2">Two</div>
-    <div class="border border-red-500 m-2">Three</div>
-    <div class="border border-red-500 m-2">Four</div>
-    <div class="border border-red-500 m-2">Five</div>
-  </div>
-
-
 </template>
 
 <script setup>
@@ -59,8 +49,18 @@ const formatPrice = (price) => {
 
 <style>
 
+.header {
+  grid-area: header;
+}
 
+.sidebar {
+  grid-area: sidebar;
+  align-self: start;
+}
 
+.content {
+  grid-area: content;
+}
 
 .swiper {
   width: 60%;
