@@ -2,12 +2,7 @@
   <div class="max-w-md mx-auto p-6 bg-white rounded-md shadow-md">
     <h2 class="text-2xl font-bold mb-4">Редактировать</h2>
     <form
-        @submit.prevent="useProducts().updateProduct(product.id,{
-            title: product.title,
-            description: product.description,
-            price: product.price,
-            image: product.images
-        })"
+        @submit.prevent="updateProduct(product.id,product)"
     >
       <div class="mb-4">
         <label class="block text-gray-700 font-bold mb-2" for="name">
@@ -48,7 +43,7 @@
       </div>
       <div class="border px-4 py-2 flex overflow-x-auto">
       <div class="flex-none w-48 mr-2 mb-1"
-           v-for="(imageUrl, index) in product.images" key="index">
+           v-for="(image, index) in product.images" key="index">
         <div class="border border-red-600 p-1">
           <button
               @click="removeImage(index)"
@@ -56,10 +51,14 @@
           >
             &times;
           </button>
-        <img  :src="`http://127.0.0.1:8000/storage/products/${imageUrl.image_path}`" :alt="product.title"
-        >
+        <img  :src="`http://127.0.0.1:8000/storage/products/${image.image_path}`" :alt="product.title">
         </div>
       </div>
+        <div v-for="image in imageUrl" class="flex-none w-48 mr-2 mb-1">
+          <div class="border border-red-600 p-1">
+          <img :src="image" alt="Preview" class="max-w-full h-auto">
+        </div>
+        </div>
       </div>
       <div class="mb-4">
         <label class="block text-gray-700 font-bold mb-2" for="image">
@@ -69,7 +68,8 @@
             class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             id="image"
             type="file"
-            @change="handleImageUpload"
+            @change="handleImageSelected"
+            multiple
         />
       </div>
       <div class="flex items-center justify-between">
@@ -88,22 +88,50 @@
 <script setup>
 
 import {useProducts} from "~/composables/useProducts.ts";
+import {useImageUpload} from "~/composables/useImageUpload.ts";
+import axios from "axios";
+import {useAppStore} from "~/store/index.ts";
 
 const route = useRoute()
 const productId = route.params.id
 const product = ref(await useProducts().showProduct(productId))
-const products = ref({
-  title: product.value.title,
-  description: product.value.description,
-  price: product.value.price,
-  image: product.value.images,
-});
+
 
 const removeImage = (index) => {
   product.value.images.splice(index, 1);
-  products.value.image = product.value.images;
 };
 
+let {imageFile,imageUrl, handleImageSelected } = useImageUpload()
 
-const handleImageUpload = async (e) => {}
+const updateProduct = async (id, productItem) => {
+
+  const existingImages = product.value.images.map(image => image.image_path);
+
+  console.log(existingImages)
+
+  const formData = new FormData()
+
+  formData.append('title', productItem.title)
+  formData.append('description', productItem.description)
+  formData.append('price', productItem.price)
+
+  existingImages.forEach(image => {
+    formData.append('existing_images[]', image);
+  });
+
+  imageFile.value.forEach(file => {
+    formData.append('images[]', file)
+  })
+
+    const response = await axios.post(`/api/update/${id}`, formData, {
+      headers: {
+        'Content-Type':'multipart/form-data'
+      }}
+    ).then((res) => {
+      console.log(res.data)
+    });
+}
+
+
+
 </script>

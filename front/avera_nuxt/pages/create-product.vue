@@ -55,6 +55,7 @@
             id="product_image"
             type="file"
             @change="handleImageSelected"
+            name="images"
             multiple
         />
       </div>
@@ -89,7 +90,6 @@ let {imageFile,imageUrl, handleImageSelected } = useImageUpload()
   if (!imageFile.value) return
 
     const formData = new FormData()
-
 
     formData.append('title', product.title)
     formData.append('description', product.description)

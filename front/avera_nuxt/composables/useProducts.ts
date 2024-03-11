@@ -34,7 +34,12 @@ export const useProducts = () =>{
     }
 
     async function updateProduct(productId: string, data: any){
-        const res = await axios.put(`/api/update/${productId}`, data)
+
+        const res = await axios.put(`/api/update/${productId}`, data, {
+            headers: {
+                'Content-Type':'multipart/form-data'
+            }
+        })
         const res2 = await axios.get('/api/products')
         useAppStore().products = res2.data
         await useRouter().replace('/my-profile')

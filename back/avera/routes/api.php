@@ -29,7 +29,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::get('/products', [\App\Http\Controllers\Api\ProductController::class, 'index']);
 
     Route::get('/products/{product}', [\App\Http\Controllers\Api\ProductController::class,'show']);
-    Route::put('/update/{product}', [\App\Http\Controllers\Api\ProductController::class, 'update']);
+    Route::post('/update/{product}', [\App\Http\Controllers\Api\ProductController::class, 'update']);
     Route::delete('/products/{product}', [\App\Http\Controllers\Api\ProductController::class, 'destroy']);
 
 
